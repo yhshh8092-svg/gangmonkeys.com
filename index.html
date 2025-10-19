@@ -11,7 +11,50 @@
   <link rel="stylesheet" href="css/all.min.css" />
 
   <style>
-    /* ... keep your existing styles ... */
+    /* Fullscreen Background GIF */
+    .bg-gif {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      z-index: -2;
+      pointer-events: none; /* Let clicks pass through */
+    }
+
+    /* Optional: Blur overlay */
+    .blur-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      backdrop-filter: blur(4px);
+      z-index: -1;
+    }
+
+    /* Click-to-enter overlay */
+    #overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.8);
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 24px;
+      z-index: 10;
+      cursor: pointer;
+    }
+
+    #overlay.hidden {
+      display: none;
+    }
+
     .discord-button {
       background-color: #7289da;
       color: white;
@@ -23,6 +66,7 @@
       margin-top: 20px;
       transition: background-color 0.3s;
     }
+
     .discord-button:hover {
       background-color: #5b6eae;
     }
@@ -40,11 +84,38 @@
       vertical-align: middle;
       margin-right: 10px;
     }
+
+    .section-title {
+      color: white;
+      margin-top: 40px;
+    }
+
+    .card-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      color: white;
+      text-align: center;
+    }
+
+    .gif-container img {
+      max-width: 300px;
+      margin-top: 60px;
+    }
   </style>
 </head>
 
 <body>
+  <!-- Fullscreen click overlay -->
   <div id="overlay" onclick="playMusicAndHideOverlay()">Click to Enter</div>
+
+  <!-- Fullscreen background -->
   <img src="media/bg.gif" alt="Background Animation" class="bg-gif" />
   <div class="blur-overlay"></div>
 
@@ -52,7 +123,7 @@
     <img src="images/gangmonkeys.gif" alt="Gangmonkeys Logo" />
   </div>
 
-  <!-- 👇 Discord Login Button -->
+  <!-- Discord Login Button -->
   <div>
     <button class="discord-button" onclick="redirectToDiscord()">Login with Discord</button>
     <div id="userInfo" class="user-info"></div>
@@ -69,7 +140,8 @@
     <div id="gangList" class="card-container"></div>
   </section>
 
-  <audio id="backgroundAudio" src="media/Roi.mp3" loop autoplay></audio>
+  <!-- Audio -->
+  <audio id="backgroundAudio" src="media/Roi.mp3" loop></audio>
 
   <!-- Scripts -->
   <script src="js/script.js"></script>
@@ -88,7 +160,7 @@
     async function exchangeCodeForToken(code) {
       const params = new URLSearchParams();
       params.append('client_id', 1429417866699997305);
-      params.append('client_secret', 'TmssUP1mwUAEXUBqPGD8yBiZ2HWLAW9h'); // ❗Replace this securely in a real backend
+      params.append('client_secret', 'TmssUP1mwUAEXUBqPGD8yBiZ2HWLAW9h'); // ❗ Do NOT expose in real code
       params.append('grant_type', 'authorization_code');
       params.append('code', code);
       params.append('redirect_uri', REDIRECT_URI);
