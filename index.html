@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>gangmonkeys.com</title>
 
   <!-- SEO & Meta -->
@@ -25,22 +25,219 @@
   <meta name="twitter:image" content="https://r2.gangmonkeys.com/gangmonkeys/gangmonkeys.png" />
 
   <!-- Stylesheets -->
-  <link rel="stylesheet" href="css/styles.css" asp-append-version="true" />
+  <link rel="stylesheet" href="css/styles.css" />
   <link rel="stylesheet" href="css/all.min.css" />
+
+  <style>
+    /* Essential CSS for full screen gif background and overlay */
+
+    :root {
+      --purple: #8b0000; /* Deep red */
+      --light-purple: #ff4c4c; /* Bright red */
+      --white: #f5f5f5;
+      --dark-bg: #000000;
+    }
+
+    /* Overlay */
+    #overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.9);
+      z-index: 10;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 30px;
+      font-weight: 300;
+      color: white;
+      text-align: center;
+      cursor: pointer;
+      user-select: none;
+      transition: opacity 0.5s ease-out;
+    }
+    #overlay.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .no-scroll {
+      overflow: hidden;
+      touch-action: none;
+    }
+
+    /* Body */
+    body {
+      margin: 0; padding: 0;
+      font-family: "Courier New", Courier, monospace;
+      color: var(--light-purple);
+      background-color: black;
+      text-align: center;
+      user-select: none;
+      overflow-x: hidden;
+    }
+
+    /* Fullscreen GIF Background */
+    .bg-gif {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      z-index: -2;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    /* Blur overlay on top */
+    .blur-overlay {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(6px);
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* GIF container */
+    .gif-container {
+      position: relative;
+      margin: 30px auto;
+      max-width: 300px;
+      z-index: 1;
+    }
+
+    .gif-container img {
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+      pointer-events: none;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0);
+    }
+
+    /* Buttons */
+    .button-container {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin: 20px auto;
+      flex-wrap: wrap;
+      z-index: 1;
+      position: relative;
+    }
+
+    .outlined-button {
+      text-decoration: none;
+      padding: 10px 15px;
+      border: 2px solid var(--purple);
+      background: transparent;
+      border-radius: 8px;
+      color: var(--light-purple);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 14px;
+      text-shadow: 0 0 2px var(--purple);
+      width: 115px;
+      height: 40px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .outlined-button:hover {
+      color: var(--white);
+      border-color: var(--light-purple);
+      transform: scale(1.05);
+      background-color: rgba(139, 0, 0, 0.3);
+    }
+
+    /* Discord Logo */
+    .discord-logo {
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      z-index: 5;
+    }
+
+    .discord-logo img {
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+      pointer-events: auto;
+      transition: transform 0.3s ease;
+    }
+
+    .discord-logo img:hover {
+      transform: scale(1.1);
+    }
+
+    /* Section Titles */
+    .section-divider {
+      width: 80%;
+      height: 2px;
+      background-color: var(--purple);
+      margin: 30px auto;
+      border-radius: 5px;
+      z-index: 1;
+      position: relative;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      color: white;
+      margin: 20px 0;
+      z-index: 1;
+      position: relative;
+    }
+
+    /* Clock & Popup */
+    #clock {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      font-size: 20px;
+      color: var(--white);
+      z-index: 5;
+      user-select: none;
+    }
+
+    #timeCheckPopup {
+      position: fixed;
+      top: 40px;
+      left: 10px;
+      background-color: rgba(0, 0, 0, 0.8);
+      color: var(--white);
+      padding: 10px;
+      border-radius: 5px;
+      z-index: 5;
+      user-select: none;
+      display: none;
+    }
+  </style>
 </head>
 
 <body>
 
   <!-- Entry Overlay -->
-  <div id="overlay" role="button" aria-label="Click to Enter" onclick="playMusicAndHideOverlay()">
+  <div
+    id="overlay"
+    role="button"
+    aria-label="Click to Enter"
+    tabindex="0"
+  >
     Click to Enter
   </div>
 
-  <!-- Background Video -->
-<img src="media/bg.gif" alt="Background Animation" class="bg-gif" />
+  <!-- Background GIF -->
+  <img src="media/bg.gif" alt="Background Animation" class="bg-gif" />
 
-  <!-- Volume Control -->
-  
+  <!-- Blur overlay -->
+  <div class="blur-overlay"></div>
 
   <!-- Centered GIF Logo -->
   <div class="gif-container">
@@ -48,7 +245,7 @@
   </div>
 
   <!-- Navigation Buttons -->
-  <nav class="button-container">
+  <nav class="button-container" aria-label="Main Navigation">
     <button class="outlined-button" onclick="window.location.href='/depot';">Depot</button>
     <button class="outlined-button" onclick="window.location.href='/archive';">Archive</button>
     <button class="outlined-button" onclick="window.location.href='/hoa';">HOA</button>
@@ -76,19 +273,77 @@
   </section>
 
   <!-- Discord Link -->
-  <a href="https://discord.gg/" target="_blank" class="discord-logo" aria-label="Join us on Discord">
+  <a href="https://discord.gg/" target="_blank" rel="noopener noreferrer" class="discord-logo" aria-label="Join us on Discord">
     <img src="images/discord.png" alt="Discord" />
   </a>
 
   <!-- Background Music -->
-  <audio id="backgroundAudio" src="media/Roi.ogg" loop autoplay></audio>
+  <audio id="backgroundAudio" src="media/Roi.ogg" loop preload="auto"></audio>
 
   <!-- Clock & Time Warning -->
   <div id="clock" aria-label="Current Time"></div>
-  <div id="timeCheckPopup" style="display: none;">You should go to bed!</div>
+  <div id="timeCheckPopup">You should go to bed!</div>
 
-  <!-- Scripts -->
-  <script src="js/script.js"></script>
+  <script>
+    // Disable scroll when overlay visible
+    function toggleNoScroll(enable) {
+      if (enable) {
+        document.body.classList.add('no-scroll');
+      } else {
+        document.body.classList.remove('no-scroll');
+      }
+    }
+
+    const overlay = document.getElementById('overlay');
+    const audio = document.getElementById('backgroundAudio');
+    const clock = document.getElementById('clock');
+    const timeCheckPopup = document.getElementById('timeCheckPopup');
+
+    // Initially disable scroll
+    toggleNoScroll(true);
+
+    function playMusicAndHideOverlay() {
+      audio.play().catch(() => {
+        // Autoplay might be blocked; ignore error
+      });
+      overlay.classList.add('hidden');
+      toggleNoScroll(false);
+    }
+
+    overlay.addEventListener('click', playMusicAndHideOverlay);
+    overlay.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        playMusicAndHideOverlay();
+      }
+    });
+
+    // Clock update & bedtime warning
+    function updateClock() {
+      const now = new Date();
+      const hours = now.getHours();
+      const minutes = now.getMinutes();
+      const seconds = now.getSeconds();
+
+      // Format time HH:MM:SS
+      const timeStr = 
+        String(hours).padStart(2, '0') + ':' + 
+        String(minutes).padStart(2, '0') + ':' + 
+        String(seconds).padStart(2, '0');
+
+      clock.textContent = timeStr;
+
+      // Show bedtime warning between 11PM and 6AM
+      if (hours >= 23 || hours < 6) {
+        timeCheckPopup.style.display = 'block';
+      } else {
+        timeCheckPopup.style.display = 'none';
+      }
+    }
+
+    updateClock();
+    setInterval(updateClock, 1000);
+  </script>
+
   <script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015"
     data-cf-beacon='{"token":"0a73147e6d68452a8790017666f982e6"}' crossorigin="anonymous"></script>
 </body>
