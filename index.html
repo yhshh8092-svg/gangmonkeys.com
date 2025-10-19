@@ -161,18 +161,18 @@
     const USER_URL = 'https://discord.com/api/users/@me';
 
     function redirectToDiscord() {
-      const url = `https://discord.com/oauth2/authorize?client_id=1429417866699997305&response_type=code&redirect_uri=https%3A%2F%2Fcoolkidss.netlify.app%2F&scope=identify`;
+      const url = `https://discord.com/oauth2/authorize?client_id=${CLIENT_ID}&response_type=code&redirect_uri=${encodeURIComponent(REDIRECT_URI)}&scope=identify`;
       window.location.href = url;
     }
 
     async function exchangeCodeForToken(code) {
       const params = new URLSearchParams();
-      params.append('client_id', 1429417866699997305);
+      params.append('client_id', CLIENT_ID);
       // WARNING: This is NOT secure – should be done in backend!
       params.append('client_secret', 'dd1zJ688c9oFladDwMvBbW_97yrV0FKD'); // ⚠️ REMOVE FROM FRONTEND IN PRODUCTION
       params.append('grant_type', 'authorization_code');
       params.append('code', code);
-      params.append('redirect_uri', https://coolkidss.netlify.app/);
+      params.append('redirect_uri', REDIRECT_URI);
       params.append('scope', 'identify');
 
       const response = await fetch(API_URL, {
