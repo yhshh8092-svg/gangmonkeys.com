@@ -4,349 +4,136 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>monkeys.com</title>
-
-  <!-- SEO & Meta -->
   <meta name="description" content="Cool Kids" />
   <meta name="theme-color" content="#ffffff" />
 
-  
-
-  <!-- Stylesheets -->
   <link rel="stylesheet" href="css/styles.css" asp-append-version="true" />
   <link rel="stylesheet" href="css/all.min.css" />
 
   <style>
-    :root {
-      --purple: #8b0000; /* Deep red */
-      --light-purple: #ff4c4c; /* Bright red */
-      --white: #f5f5f5;
-      --dark-bg: #000000;
-    }
-
-    /* Body */
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: "Courier New", Courier, monospace;
-      color: var(--light-purple);
-      background-color: black;
-      text-align: center;
-      user-select: none;
-      overflow-x: hidden;
-    }
-
-    /* Background GIF */
-    .bg-gif {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      object-fit: cover;
-      z-index: -2;
-      user-select: none;
-      pointer-events: none;
-    }
-
-    /* Blur overlay */
-    .blur-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.6);
-      backdrop-filter: blur(6px);
-      z-index: -1;
-      pointer-events: none;
-    }
-
-    /* Entry Overlay */
-    #overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.9);
-      z-index: 10;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      opacity: 1;
-      transition: opacity 0.5s ease-out;
-      cursor: pointer;
+    /* ... keep your existing styles ... */
+    .discord-button {
+      background-color: #7289da;
       color: white;
-      font-size: 30px;
-      font-weight: 300;
-      user-select: none;
-    }
-
-    #overlay.hidden {
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    /* Other styles for buttons, containers, etc. */
-
-    .gif-container {
-      position: relative;
-      margin: 30px auto;
-      max-width: 300px;
-      z-index: 1;
-    }
-
-    .gif-container img {
-      width: 100%;
-      height: auto;
-      border-radius: 10px;
-      pointer-events: none;
-    }
-
-    .button-container {
-      display: flex;
-      justify-content: center;
-      gap: 10px;
-      margin: 20px auto;
-      flex-wrap: wrap;
-      z-index: 1;
-      position: relative;
-    }
-
-    .outlined-button {
-      text-decoration: none;
-      padding: 10px 15px;
-      border: 2px solid var(--purple);
-      background: transparent;
+      padding: 10px 20px;
+      border: none;
       border-radius: 8px;
-      color: var(--light-purple);
-      cursor: pointer;
-      transition: all 0.3s ease;
-      font-size: 14px;
-      text-shadow: 0 0 2px var(--purple);
-      width: 115px;
-      height: 40px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .outlined-button:hover {
-      color: var(--white);
-      border-color: var(--light-purple);
-      transform: scale(1.05);
-      background-color: rgba(139, 0, 0, 0.3);
-    }
-
-    /* Discord Logo */
-    .discord-logo {
-      position: fixed;
-      top: 15px;
-      right: 15px;
-      z-index: 1;
-    }
-
-    .discord-logo img {
-      width: 40px;
-      height: 40px;
-      cursor: pointer;
-      pointer-events: auto;
-      transition: transform 0.3s ease;
-    }
-
-    .discord-logo img:hover {
-      transform: scale(1.1);
-    }
-
-    /* Search input */
-    #search-container {
-      margin: 20px auto;
-      max-width: 400px;
-      position: relative;
-      z-index: 1;
-    }
-
-    #search-input {
-      width: 100%;
-      padding: 10px;
       font-size: 16px;
-      border: 2px solid var(--purple);
-      border-radius: 8px;
-      color: var(--light-purple);
-      background-color: black;
-      outline: none;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: background-color 0.3s;
+    }
+    .discord-button:hover {
+      background-color: #5b6eae;
     }
 
-    #search-input::placeholder {
-      color: var(--light-purple);
-    }
-
-    /* Section Titles */
-    .section-divider {
-      width: 80%;
-      height: 2px;
-      background-color: var(--purple);
-      margin: 30px auto;
-      border-radius: 5px;
-      position: relative;
-      z-index: 1;
-    }
-
-    .section-title {
-      text-align: center;
-      font-size: 24px;
-      font-weight: bold;
+    .user-info {
+      margin-top: 20px;
       color: white;
-      margin: 20px 0;
-      position: relative;
-      z-index: 1;
+      font-size: 18px;
     }
 
-    /* User and Gang container */
-    .card-container {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 20px;
-      padding: 25px;
-      position: relative;
-      z-index: 1;
-    }
-
-    /* Clock & Time warning */
-    #clock {
-      position: fixed;
-      top: 10px;
-      left: 10px;
-      font-size: 20px;
-      color: var(--white);
-      z-index: 1;
-      user-select: none;
-    }
-
-    #timeCheckPopup {
-      position: fixed;
-      top: 40px;
-      left: 10px;
-      background-color: rgba(0, 0, 0, 0.8);
-      color: var(--white);
-      padding: 10px;
-      border-radius: 5px;
-      z-index: 1;
-      display: none;
-      user-select: none;
+    .user-info img {
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      vertical-align: middle;
+      margin-right: 10px;
     }
   </style>
 </head>
-<body>
-  <!-- Entry Overlay -->
-  <div id="overlay" role="button" aria-label="Click to Enter" onclick="playMusicAndHideOverlay()">
-    Click to Enter
-  </div>
 
-  <!-- Background GIF and Blur Overlay -->
+<body>
+  <div id="overlay" onclick="playMusicAndHideOverlay()">Click to Enter</div>
   <img src="media/bg.gif" alt="Background Animation" class="bg-gif" />
   <div class="blur-overlay"></div>
 
-  <!-- Centered GIF Logo -->
   <div class="gif-container">
     <img src="images/gangmonkeys.gif" alt="Gangmonkeys Logo" />
   </div>
 
-  
+  <!-- 👇 Discord Login Button -->
+  <div>
+    <button class="discord-button" onclick="redirectToDiscord()">Login with Discord</button>
+    <div id="userInfo" class="user-info"></div>
+  </div>
 
-  <!-- Search -->
-  
-
-  
-
-  <!-- Users Section -->
+  <!-- Sections -->
   <section id="users-section">
     <h2 class="section-title">Group Members</h2>
     <div id="userList" class="card-container"></div>
   </section>
 
-
-
-  <!-- Gangs Section -->
   <section id="gangs-section">
     <h2 class="section-title">Cool Things💢</h2>
     <div id="gangList" class="card-container"></div>
   </section>
 
-  
-
-  <!-- Background Music -->
   <audio id="backgroundAudio" src="media/Roi.mp3" loop autoplay></audio>
 
-  
   <!-- Scripts -->
   <script src="js/script.js"></script>
-  <script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015"
-    data-cf-beacon='{"token":"0a73147e6d68452a8790017666f982e6"}' crossorigin="anonymous"></script>
 
-<script>
-    // Load users from users.txt and show as username cards
-    async function loadUsers() {
-      try {
-        const response = await fetch('Users.wtf');
-        if (!response.ok) throw new Error('Failed to fetch users.txt');
-
-        const text = await response.text();
-        const usernames = text.split('\n').map(line => line.trim()).filter(line => line.length > 0);
-
-        const userList = document.getElementById('userList');
-        if (!userList) return;
-
-        userList.innerHTML = ''; // Clear existing
-
-        usernames.forEach(username => {
-          const card = document.createElement('div');
-          card.className = 'profile-card';
-          card.textContent = username;
-          userList.appendChild(card);
-        });
-      } catch (error) {
-        console.error('Error loading users:', error);
-      }
-    }
-
-
-<script>
-    // Load users from users.txt and show as username cards
-    async function loadUsers() {
-      try {
-        const response = await fetch('Gangs.wtf');
-        if (!response.ok) throw new Error('Failed to fetch users.txt');
-
-        const text = await response.text();
-        const usernames = text.split('\n').map(line => line.trim()).filter(line => line.length > 0);
-
-        const userList = document.getElementById('gangList');
-        if (!gangList) return;
-
-        userList.innerHTML = ''; // Clear existing
-
-        usernames.forEach(username => {
-          const card = document.createElement('div');
-          card.className = 'profile-card';
-          card.textContent = username;
-          userList.appendChild(card);
-        });
-      } catch (error) {
-        console.error('Error loading users:', error);
-      }
-    }
-
-
-
-  
   <script>
-    // Example function to hide overlay and play music on click
+    const CLIENT_ID = '1429417866699997305';
+    const REDIRECT_URI = 'https://gangmonk.netlify.app/';
+    const API_URL = 'https://discord.com/api/oauth2/token';
+    const USER_URL = 'https://discord.com/api/users/@me';
+
+    function redirectToDiscord() {
+      const url = `https://discord.com/oauth2/authorize?client_id=1429417866699997305&response_type=code&redirect_uri=https%3A%2F%2Fgangmonk.netlify.app%2F&scope=identify+rpc+rpc.activities.write+activities.read`;
+      window.location.href = url;
+    }
+
+    async function exchangeCodeForToken(code) {
+      const params = new URLSearchParams();
+      params.append('client_id', 1429417866699997305);
+      params.append('client_secret', 'TmssUP1mwUAEXUBqPGD8yBiZ2HWLAW9h'); // ❗Replace this securely in a real backend
+      params.append('grant_type', 'authorization_code');
+      params.append('code', code);
+      params.append('redirect_uri', REDIRECT_URI);
+      params.append('scope', 'identify');
+
+      const response = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: params
+      });
+
+      return await response.json();
+    }
+
+    async function getUserInfo(token) {
+      const res = await fetch(USER_URL, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      return await res.json();
+    }
+
+    async function handleOAuthRedirect() {
+      const params = new URLSearchParams(window.location.search);
+      const code = params.get('code');
+      if (!code) return;
+
+      try {
+        const tokenData = await exchangeCodeForToken(code);
+        const user = await getUserInfo(tokenData.access_token);
+
+        const userDiv = document.getElementById('userInfo');
+        userDiv.innerHTML = `<img src="https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png" alt="Avatar"> ${user.username}#${user.discriminator}`;
+      } catch (error) {
+        console.error('OAuth failed:', error);
+      }
+    }
+
+    handleOAuthRedirect();
+
     function playMusicAndHideOverlay() {
       const overlay = document.getElementById('overlay');
       const audio = document.getElementById('backgroundAudio');
-
       audio.play();
       overlay.classList.add('hidden');
     }
