@@ -167,12 +167,12 @@
 
     async function exchangeCodeForToken(code) {
       const params = new URLSearchParams();
-      params.append('client_id', CLIENT_ID);
+      params.append('client_id', 1429417866699997305);
       // WARNING: This is NOT secure – should be done in backend!
-      params.append('client_secret', 'YOUR_CLIENT_SECRET'); // ⚠️ REMOVE FROM FRONTEND IN PRODUCTION
+      params.append('client_secret', 'dd1zJ688c9oFladDwMvBbW_97yrV0FKD'); // ⚠️ REMOVE FROM FRONTEND IN PRODUCTION
       params.append('grant_type', 'authorization_code');
       params.append('code', code);
-      params.append('redirect_uri', REDIRECT_URI);
+      params.append('redirect_uri', https://coolkidss.netlify.app/);
       params.append('scope', 'identify');
 
       const response = await fetch(API_URL, {
