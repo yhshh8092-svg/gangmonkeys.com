@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>gangmonkeys.com</title>
 
   <!-- SEO & Meta -->
@@ -27,41 +27,239 @@
   <!-- Stylesheets -->
   <link rel="stylesheet" href="css/styles.css" asp-append-version="true" />
   <link rel="stylesheet" href="css/all.min.css" />
-  
+
   <style>
-    /* Simple overrides for user cards */
-    #userList .profile-card {
-      background-color: transparent;
-      border: 2px solid var(--purple);
-      border-radius: 12px;
-      padding: 20px;
-      margin: 10px auto;
-      width: 300px;
-      cursor: default;
-      transition: transform 0.3s ease, border-color 0.3s ease;
-      color: var(--light-purple);
-      font-size: 22px;
-      font-weight: bold;
-      text-align: center;
-      animation: rainbow 2s linear infinite;
+    :root {
+      --purple: #8b0000; /* Deep red */
+      --light-purple: #ff4c4c; /* Bright red */
+      --white: #f5f5f5;
+      --dark-bg: #000000;
     }
-    #userList .profile-card:hover {
+
+    /* Body */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: "Courier New", Courier, monospace;
+      color: var(--light-purple);
+      background-color: black;
+      text-align: center;
+      user-select: none;
+      overflow-x: hidden;
+    }
+
+    /* Background GIF */
+    .bg-gif {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      object-fit: cover;
+      z-index: -2;
+      user-select: none;
+      pointer-events: none;
+    }
+
+    /* Blur overlay */
+    .blur-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(6px);
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    /* Entry Overlay */
+    #overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.9);
+      z-index: 10;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 1;
+      transition: opacity 0.5s ease-out;
+      cursor: pointer;
+      color: white;
+      font-size: 30px;
+      font-weight: 300;
+      user-select: none;
+    }
+
+    #overlay.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* Other styles for buttons, containers, etc. */
+
+    .gif-container {
+      position: relative;
+      margin: 30px auto;
+      max-width: 300px;
+      z-index: 1;
+    }
+
+    .gif-container img {
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+      pointer-events: none;
+    }
+
+    .button-container {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin: 20px auto;
+      flex-wrap: wrap;
+      z-index: 1;
+      position: relative;
+    }
+
+    .outlined-button {
+      text-decoration: none;
+      padding: 10px 15px;
+      border: 2px solid var(--purple);
+      background: transparent;
+      border-radius: 8px;
+      color: var(--light-purple);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 14px;
+      text-shadow: 0 0 2px var(--purple);
+      width: 115px;
+      height: 40px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .outlined-button:hover {
+      color: var(--white);
       border-color: var(--light-purple);
       transform: scale(1.05);
+      background-color: rgba(139, 0, 0, 0.3);
+    }
+
+    /* Discord Logo */
+    .discord-logo {
+      position: fixed;
+      top: 15px;
+      right: 15px;
+      z-index: 1;
+    }
+
+    .discord-logo img {
+      width: 40px;
+      height: 40px;
+      cursor: pointer;
+      pointer-events: auto;
+      transition: transform 0.3s ease;
+    }
+
+    .discord-logo img:hover {
+      transform: scale(1.1);
+    }
+
+    /* Search input */
+    #search-container {
+      margin: 20px auto;
+      max-width: 400px;
+      position: relative;
+      z-index: 1;
+    }
+
+    #search-input {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border: 2px solid var(--purple);
+      border-radius: 8px;
+      color: var(--light-purple);
+      background-color: black;
+      outline: none;
+    }
+
+    #search-input::placeholder {
+      color: var(--light-purple);
+    }
+
+    /* Section Titles */
+    .section-divider {
+      width: 80%;
+      height: 2px;
+      background-color: var(--purple);
+      margin: 30px auto;
+      border-radius: 5px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+      color: white;
+      margin: 20px 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* User and Gang container */
+    .card-container {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      padding: 25px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Clock & Time warning */
+    #clock {
+      position: fixed;
+      top: 10px;
+      left: 10px;
+      font-size: 20px;
       color: var(--white);
+      z-index: 1;
+      user-select: none;
+    }
+
+    #timeCheckPopup {
+      position: fixed;
+      top: 40px;
+      left: 10px;
+      background-color: rgba(0, 0, 0, 0.8);
+      color: var(--white);
+      padding: 10px;
+      border-radius: 5px;
+      z-index: 1;
+      display: none;
+      user-select: none;
     }
   </style>
 </head>
-
 <body>
-
   <!-- Entry Overlay -->
   <div id="overlay" role="button" aria-label="Click to Enter" onclick="playMusicAndHideOverlay()">
     Click to Enter
   </div>
 
-  <!-- Background GIF -->
+  <!-- Background GIF and Blur Overlay -->
   <img src="media/bg.gif" alt="Background Animation" class="bg-gif" />
+  <div class="blur-overlay"></div>
 
   <!-- Centered GIF Logo -->
   <div class="gif-container">
@@ -69,7 +267,7 @@
   </div>
 
   <!-- Navigation Buttons -->
-  <nav class="button-container">
+  <nav class="button-container" aria-label="Primary Navigation">
     <button class="outlined-button" onclick="window.location.href='/depot';">Depot</button>
     <button class="outlined-button" onclick="window.location.href='/archive';">Archive</button>
     <button class="outlined-button" onclick="window.location.href='/hoa';">HOA</button>
@@ -85,9 +283,7 @@
   <!-- Users Section -->
   <section id="users-section">
     <h2 class="section-title">Users</h2>
-    <div id="userList" class="card-container">
-      <!-- User cards will load here -->
-    </div>
+    <div id="userList" class="card-container"></div>
   </section>
 
   <hr class="section-divider" />
@@ -108,10 +304,14 @@
 
   <!-- Clock & Time Warning -->
   <div id="clock" aria-label="Current Time"></div>
-  <div id="timeCheckPopup" style="display: none;">You should go to bed!</div>
+  <div id="timeCheckPopup">You should go to bed!</div>
 
   <!-- Scripts -->
-  <script>
+  <script src="js/script.js"></script>
+  <script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015"
+    data-cf-beacon='{"token":"0a73147e6d68452a8790017666f982e6"}' crossorigin="anonymous"></script>
+
+<script>
     // Load users from users.txt and show as username cards
     async function loadUsers() {
       try {
@@ -137,19 +337,15 @@
       }
     }
 
-    document.addEventListener('DOMContentLoaded', loadUsers);
-
-    // Your existing playMusicAndHideOverlay function can go here
+  <script>
+    // Example function to hide overlay and play music on click
     function playMusicAndHideOverlay() {
       const overlay = document.getElementById('overlay');
       const audio = document.getElementById('backgroundAudio');
-      if (audio) audio.play();
-      if (overlay) overlay.classList.add('hidden');
-      document.body.classList.remove('no-scroll');
+
+      audio.play();
+      overlay.classList.add('hidden');
     }
   </script>
-
-  <script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015"
-    data-cf-beacon='{"token":"0a73147e6d68452a8790017666f982e6"}' crossorigin="anonymous"></script>
 </body>
 </html>
