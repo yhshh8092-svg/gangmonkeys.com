@@ -347,4 +347,31 @@ body {
         scale: 0.6;
         opacity: 0;
     }
+    
+    /* Full-screen GIF */
+#bgGif {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  z-index: -2;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* Blur overlay on top of GIF */
+.blur-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6); /* semi-transparent black tint */
+  backdrop-filter: blur(6px);
+  z-index: -1;
+  pointer-events: none;
+}
+
 }
