@@ -7,11 +7,13 @@
   <meta name="description" content="Cool Kids" />
   <meta name="theme-color" content="#ffffff" />
 
-  <link rel="stylesheet" href="css/styles.css" asp-append-version="true" />
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/styles.css" />
   <link rel="stylesheet" href="css/all.min.css" />
 
+  <!-- Inline Styles -->
   <style>
-    /* Fullscreen Background GIF */
+    /* Background GIF */
     .bg-gif {
       position: fixed;
       top: 0;
@@ -20,10 +22,9 @@
       height: 100vh;
       object-fit: cover;
       z-index: -2;
-      pointer-events: none; /* Let clicks pass through */
+      pointer-events: none;
     }
 
-    /* Optional: Blur overlay */
     .blur-overlay {
       position: fixed;
       top: 0;
@@ -34,7 +35,6 @@
       z-index: -1;
     }
 
-    /* Click-to-enter overlay */
     #overlay {
       position: fixed;
       top: 0;
@@ -94,6 +94,7 @@
       display: flex;
       flex-wrap: wrap;
       gap: 10px;
+      justify-content: center;
     }
 
     body {
@@ -102,6 +103,7 @@
       font-family: Arial, sans-serif;
       color: white;
       text-align: center;
+      background: black;
     }
 
     .gif-container img {
@@ -112,18 +114,19 @@
 </head>
 
 <body>
-  <!-- Fullscreen click overlay -->
+  <!-- Fullscreen Click-to-Enter Overlay -->
   <div id="overlay" onclick="playMusicAndHideOverlay()">Click to Enter</div>
 
-  <!-- Fullscreen background -->
+  <!-- Background and Blur -->
   <img src="media/bg.gif" alt="Background Animation" class="bg-gif" />
   <div class="blur-overlay"></div>
 
+  <!-- Logo -->
   <div class="gif-container">
     <img src="images/gangmonkeys.gif" alt="Gangmonkeys Logo" />
   </div>
 
-  <!-- Discord Login Button -->
+  <!-- Discord Login -->
   <div>
     <button class="discord-button" onclick="redirectToDiscord()">Login with Discord</button>
     <div id="userInfo" class="user-info"></div>
@@ -132,7 +135,14 @@
   <!-- Sections -->
   <section id="users-section">
     <h2 class="section-title">Group Members</h2>
-    <div id="userList" class="card-container"></div>
+    <div id="userList" class="card-container">
+      <!-- Example static members -->
+      <div>Massacre</div>
+      <div>Kiwi</div>
+      <div>Doll</div>
+      <div>Panda</div>
+      <div>YTX.exe</div>
+    </div>
   </section>
 
   <section id="gangs-section">
@@ -140,15 +150,13 @@
     <div id="gangList" class="card-container"></div>
   </section>
 
-  <!-- Audio -->
+  <!-- Background Audio -->
   <audio id="backgroundAudio" src="media/Roi.mp3" loop></audio>
 
   <!-- Scripts -->
-  <script src="js/script.js"></script>
-
   <script>
     const CLIENT_ID = '1429417866699997305';
-    const REDIRECT_URI = 'https://gangmonk.netlify.app/';
+    const REDIRECT_URI = 'https://coolkidss.netlify.app/';
     const API_URL = 'https://discord.com/api/oauth2/token';
     const USER_URL = 'https://discord.com/api/users/@me';
 
@@ -159,8 +167,9 @@
 
     async function exchangeCodeForToken(code) {
       const params = new URLSearchParams();
-      params.append('client_id', 1429417866699997305);
-      params.append('client_secret', 'TmssUP1mwUAEXUBqPGD8yBiZ2HWLAW9h'); // ❗ Do NOT expose in real code
+      params.append('client_id', CLIENT_ID);
+      // WARNING: This is NOT secure – should be done in backend!
+      params.append('client_secret', 'YOUR_CLIENT_SECRET'); // ⚠️ REMOVE FROM FRONTEND IN PRODUCTION
       params.append('grant_type', 'authorization_code');
       params.append('code', code);
       params.append('redirect_uri', REDIRECT_URI);
@@ -195,9 +204,22 @@
         const user = await getUserInfo(tokenData.access_token);
 
         const userDiv = document.getElementById('userInfo');
-        userDiv.innerHTML = `<img src="https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png" alt="Avatar"> ${user.username}#${user.discriminator}`;
+
+        if (user && user.username && user.discriminator) {
+          const avatarUrl = user.avatar
+            ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`
+            : `https://cdn.discordapp.com/embed/avatars/${parseInt(user.discriminator) % 5}.png`;
+
+          userDiv.innerHTML = `
+            <img src="${avatarUrl}" alt="Avatar">
+            ${user.username}#${user.discriminator}
+          `;
+        } else {
+          userDiv.textContent = "Failed to load user info.";
+        }
       } catch (error) {
-        console.error('OAuth failed:', error);
+        console.error('OAuth Error:', error);
+        document.getElementById('userInfo').textContent = 'OAuth Login Failed';
       }
     }
 
