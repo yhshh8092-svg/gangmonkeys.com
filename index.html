@@ -1,76 +1,88 @@
-<!DOCTYPE html><html lang="en"><head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>gangmonkeys.com</title>
-    <link rel="stylesheet" href="css/styles.css" asp-append-version="true">
-    <link rel="stylesheet" href="css/all.min.css">
-    <meta name="theme-color" content="#ffffff">
-    <meta name="description" content="Hall of vrchatians.">
-    <meta property="og:url" content="https://gangmonkeys.com">
-    <meta property="og:type" content="website">
-    <meta property="og:title" content="gangmonkeys.com">
-    <meta property="og:description" content="Hall of vrchatians.">
-    <meta property="og:image" content="images/gangmonkeys.png">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta property="twitter:domain" content="gangmonkeys.com">
-    <meta property="twitter:url" content="https://gangmonkeys.com">
-    <meta name="twitter:title" content="gangmonkeys.com">
-    <meta name="twitter:description" content="Hall of vrchatians.">
-    <meta name="twitter:image" content="https://r2.gangmonkeys.com/gangmonkeys/gangmonkeys.png">
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>gangmonkeys.com</title>
+  <link rel="stylesheet" href="css/styles.css" asp-append-version="true" />
+  <link rel="stylesheet" href="css/all.min.css" />
+  <meta name="theme-color" content="#ffffff" />
+  <meta name="description" content="Hall of vrchatians." />
+  <meta property="og:url" content="https://gangmonkeys.com" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="gangmonkeys.com" />
+  <meta property="og:description" content="Hall of vrchatians." />
+  <meta property="og:image" content="images/gangmonkeys.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta property="twitter:domain" content="gangmonkeys.com" />
+  <meta property="twitter:url" content="https://gangmonkeys.com" />
+  <meta name="twitter:title" content="gangmonkeys.com" />
+  <meta name="twitter:description" content="Hall of vrchatians." />
+  <meta name="twitter:image" content="https://r2.gangmonkeys.com/gangmonkeys/gangmonkeys.png" />
 </head>
 <body>
-    <div id="overlay" role="button" aria-label="Click to Enter" onclick="playMusicAndHideOverlay()">
-        Click to Enter
-    </div>
-    <div class="volume-slider-container">
+  <!-- Background / Media -->
+  <video id="bgVideo" autoplay muted loop playsinline>
+    <source src="media/bg.mp4" type="video/mp4" />
+  </video>
+  <div class="blur-overlay"></div>
 
-        <input id="volume-slider" type="range" min="0" max="1" step="0.01" value="0.5">
-    </div>
+  <!-- Overlay before user “enter” -->
+  <div id="overlay" role="button" aria-label="Click to Enter" onclick="playMusicAndHideOverlay()">
+    Click to Enter
+  </div>
 
-    <video id="bgVideo" autoplay="" muted="" loop="" playsinline="">
-        <source src="media/bg.mp4" type="video/mp4">
-    </video>
-    <div class="blur-overlay"></div>
-    <div class="gif-container">
-        <img src="images/gangmonkeys.gif" alt="Animated Graphic">
-    </div>
-
-    <div class="button-container">
+  <!-- Site header (top bar) -->
+  <header class="site-header">
+    <div class="header-inner">
+      <div class="logo">
+        <img src="images/gangmonkeys.gif" alt="Gangmonkeys Logo" />
+      </div>
+      <nav class="nav-buttons">
         <button class="outlined-button" onclick="window.location.href='/depot';">Depot</button>
         <button class="outlined-button" onclick="window.location.href='/archive';">Archive</button>
         <button class="outlined-button" onclick="window.location.href='/hoa';">HOA</button>
+      </nav>
+      <div class="header-right">
+        <div id="search-container">
+          <input type="text" id="search-input" placeholder="Search..." />
+        </div>
+        <div class="volume-slider-container">
+          <input id="volume-slider" type="range" min="0" max="1" step="0.01" value="0.5" />
+        </div>
+      </div>
     </div>
+  </header>
 
-    <div id="search-container">
-        <input type="text" id="search-input" placeholder="Search...">
-    </div>
+  <!-- Main content -->
+  <main class="site-main">
+    <section id="users-section" class="section">
+      <h2 class="section-title">Users</h2>
+      <div id="userList" class="card-container"></div>
+    </section>
 
     <div class="section-divider"></div>
 
-    <div id="users-section">
-        <h2 class="section-title">Users</h2>
-        <div id="userList" class="card-container"></div>
-    </div>
+    <section id="gangs-section" class="section">
+      <h2 class="section-title">Gangs</h2>
+      <div id="gangList" class="card-container"></div>
+    </section>
+  </main>
 
-    <div class="section-divider"></div>
-
-    <div id="gangs-section">
-        <h2 class="section-title">Gangs</h2>
-        <div id="gangList" class="card-container"></div>
-    </div>
-
+  <!-- Footer / bottom area -->
+  <footer class="site-footer">
     <a href="https://discord.gg/" target="_blank" class="discord-logo">
-        <img src="images/discord.png" alt="Discord Logo">
+      <img src="images/discord.png" alt="Discord Logo" />
     </a>
-    <audio id="backgroundAudio" src="media/Roi.ogg" loop="" autoplay=""></audio>
+    <div id="clock" class="clock-display"></div>
+  </footer>
 
-    <div id="clock"></div>
-    <div id="timeCheckPopup" style="display: none;">
-        You should go to bed!
-    </div>
+  <!-- Auxiliary -->
+  <audio id="backgroundAudio" src="media/Roi.ogg" loop autoplay></audio>
+  <div id="timeCheckPopup" class="time-popup" style="display: none;">
+    You should go to bed!
+  </div>
 
-    <script src="js/script.js"></script>
-<script defer="" src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" data-cf-beacon="{" version":"2024.11.0","token":"0a73147e6d68452a8790017666f982e6","r":1,"server_timing":{"name":{"cfcachestatus":true,"cfedge":true,"cfextpri":true,"cfl4":true,"cforigin":true,"cfspeedbrain":true},"location_startswith":null}}"="" crossorigin="anonymous"></script>
-
-
-</body></html>
+  <script src="js/script.js"></script>
+</body>
+</html>
