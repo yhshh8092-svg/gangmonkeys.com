@@ -5,69 +5,193 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>VRChat Avatars Gallery</title>
   <style>
-    body {
+    * {
       margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow-x: hidden;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #111;
-      color: white;
-      text-align: center;
+      background: #000;
+      color: #fff;
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 0;
+    }
+
+    body > *:not(canvas) {
+      position: relative;
+      z-index: 1;
     }
 
     header {
-      padding: 30px;
+      text-align: center;
+      padding: 40px 20px 20px;
     }
 
     header img {
-      max-width: 200px;
+      max-width: 180px;
       height: auto;
     }
 
-    h1 {
-      margin-top: 10px;
-      font-size: 2em;
-      letter-spacing: 2px;
+    header h1 {
+      font-size: 2.2em;
+      letter-spacing: 1.5px;
+      margin-top: 15px;
+    }
+
+    main {
+      padding: 40px 20px;
     }
 
     .gallery {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 20px;
-      padding: 40px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 25px;
+    }
+
+    .gallery figure {
+      background: rgba(30, 30, 30, 0.85);
+      border-radius: 10px;
+      overflow: hidden;
+      transition: transform 0.3s, box-shadow 0.3s;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+    }
+
+    .gallery figure:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.7);
     }
 
     .gallery img {
       width: 100%;
-      border-radius: 10px;
-      transition: transform 0.3s ease;
+      display: block;
+      border-bottom: 1px solid #222;
+      border-radius: 10px 10px 0 0;
     }
 
-    .gallery img:hover {
-      transform: scale(1.05);
+    .gallery figcaption {
+      padding: 10px 15px;
+      font-size: 0.95em;
+      color: #ccc;
     }
 
     footer {
+      text-align: center;
       padding: 20px;
       font-size: 0.9em;
-      color: #aaa;
+      color: #888;
+      border-top: 1px solid #222;
+      margin-top: 40px;
+    }
+
+    @media (max-width: 600px) {
+      header h1 {
+        font-size: 1.6em;
+      }
     }
   </style>
 </head>
 <body>
+
+  <!-- Stars background canvas -->
+  <canvas id="starfield"></canvas>
+
   <header>
-    <img src="images/gangmonkeys.gif" alt="Logo" />
-    <h1>VRChat Avatar Gallery</h1>
+    <img src="images/gangmonkeys.gif" alt="VRChat Avatars Logo" />
+    <h1>VRChat Avatars Gallery</h1>
   </header>
 
-  <section class="gallery">
-    <!-- Add your VRChat avatar images below -->
-    <img src="lol.gif" alt="VRChat Avatar 1" />
-    <img src="avatar2.jpg" alt="VRChat Avatar 2" />
-    <img src="avatar3.jpg" alt="VRChat Avatar 3" />
-    <!-- Add more as needed -->
-  </section>
+  <main>
+    <section class="gallery">
+      <figure>
+        <img src="lol.gif" alt="VRChat Avatar 1" loading="lazy" />
+        <figcaption>Monkey Gang Avatar</figcaption>
+      </figure>
+      <figure>
+        <img src="avatar2.jpg" alt="VRChat Avatar 2" loading="lazy" />
+        <figcaption>Cyber Cool Avatar</figcaption>
+      </figure>
+      <figure>
+        <img src="avatar3.jpg" alt="VRChat Avatar 3" loading="lazy" />
+        <figcaption>Neon Chill Style</figcaption>
+      </figure>
+      <!-- Add more as needed -->
+    </section>
+  </main>
 
   <footer>
     &copy; 2025 VRChat Avatars Showcase. All rights reserved.
   </footer>
+
+  <script>
+    const canvas = document.getElementById('starfield');
+    const ctx = canvas.getContext('2d');
+
+    let stars = [];
+    let mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    // Create stars
+    const STAR_COUNT = 150;
+    for (let i = 0; i < STAR_COUNT; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        radius: Math.random() * 1.5 + 0.5,
+        speed: Math.random() * 0.3 + 0.1
+      });
+    }
+
+    document.addEventListener('mousemove', e => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+    });
+
+    function animateStars() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      for (let star of stars) {
+        // Parallax movement based on mouse position
+        const dx = (mouse.x - canvas.width / 2) * 0.0001;
+        const dy = (mouse.y - canvas.height / 2) * 0.0001;
+
+        star.x += dx * star.speed * 100;
+        star.y += dy * star.speed * 100;
+
+        // Wrap around edges
+        if (star.x < 0) star.x = canvas.width;
+        if (star.x > canvas.width) star.x = 0;
+        if (star.y < 0) star.y = canvas.height;
+        if (star.y > canvas.height) star.y = 0;
+
+        // Draw star
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
+        ctx.fillStyle = "#ffffff";
+        ctx.fill();
+      }
+
+      requestAnimationFrame(animateStars);
+    }
+
+    animateStars();
+  </script>
+
 </body>
 </html>
