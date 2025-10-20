@@ -3,234 +3,71 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>monkeys.com</title>
-  <meta name="description" content="Cool Kids" />
-  <meta name="theme-color" content="#ffffff" />
-
-  <!-- Stylesheets -->
-  <link rel="stylesheet" href="css/styles.css" />
-  <link rel="stylesheet" href="css/all.min.css" />
-
-  <!-- Inline Styles -->
+  <title>VRChat Avatars Gallery</title>
   <style>
-    /* Background GIF */
-    .bg-gif {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      object-fit: cover;
-      z-index: -2;
-      pointer-events: none;
-    }
-
-    .blur-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      backdrop-filter: blur(4px);
-      z-index: -1;
-    }
-
-    #overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background-color: rgba(0, 0, 0, 0.8);
-      color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 24px;
-      z-index: 10;
-      cursor: pointer;
-    }
-
-    #overlay.hidden {
-      display: none;
-    }
-
-    .discord-button {
-      background-color: #7289da;
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 8px;
-      font-size: 16px;
-      cursor: pointer;
-      margin-top: 20px;
-      transition: background-color 0.3s;
-    }
-
-    .discord-button:hover {
-      background-color: #5b6eae;
-    }
-
-    .user-info {
-      margin-top: 20px;
-      color: white;
-      font-size: 18px;
-    }
-
-    .user-info img {
-      border-radius: 50%;
-      width: 60px;
-      height: 60px;
-      vertical-align: middle;
-      margin-right: 10px;
-    }
-
-    .section-title {
-      color: white;
-      margin-top: 40px;
-    }
-
-    .card-container {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content: center;
-    }
-
     body {
       margin: 0;
-      padding: 0;
-      font-family: Arial, sans-serif;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #111;
       color: white;
       text-align: center;
-      background: black;
     }
 
-    .gif-container img {
-      max-width: 300px;
-      margin-top: 60px;
+    header {
+      padding: 30px;
+    }
+
+    header img {
+      max-width: 200px;
+      height: auto;
+    }
+
+    h1 {
+      margin-top: 10px;
+      font-size: 2em;
+      letter-spacing: 2px;
+    }
+
+    .gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 40px;
+    }
+
+    .gallery img {
+      width: 100%;
+      border-radius: 10px;
+      transition: transform 0.3s ease;
+    }
+
+    .gallery img:hover {
+      transform: scale(1.05);
+    }
+
+    footer {
+      padding: 20px;
+      font-size: 0.9em;
+      color: #aaa;
     }
   </style>
 </head>
-
 <body>
-  <!-- Fullscreen Click-to-Enter Overlay -->
-  <div id="overlay" onclick="playMusicAndHideOverlay()">Click to Enter</div>
+  <header>
+    <img src="picsart-0af97fcf-5a08-4719-a18a-2d1148142d05.webp" alt="Logo" />
+    <h1>VRChat Avatar Gallery</h1>
+  </header>
 
-  <!-- Background and Blur -->
-  <img src="media/bg.gif" alt="Background Animation" class="bg-gif" />
-  <div class="blur-overlay"></div>
-
-  <!-- Logo -->
-  <div class="gif-container">
-    <img src="images/gangmonkeys.gif" alt="Gangmonkeys Logo" />
-  </div>
-
-  <!-- Discord Login -->
-  <div>
-    <button class="discord-button" onclick="redirectToDiscord()">Login with Discord</button>
-    <div id="userInfo" class="user-info"></div>
-  </div>
-
-  <!-- Sections -->
-  <section id="users-section">
-    <h2 class="section-title">Group Members</h2>
-    <div id="userList" class="card-container">
-      <!-- Example static members -->
-      <div>Massacre</div>
-      <div>Kiwi</div>
-      <div>Doll</div>
-      <div>Panda</div>
-      <div>YTX.exe</div>
-    </div>
+  <section class="gallery">
+    <!-- Add your VRChat avatar images below -->
+    <img src="avatar1.jpg" alt="VRChat Avatar 1" />
+    <img src="avatar2.jpg" alt="VRChat Avatar 2" />
+    <img src="avatar3.jpg" alt="VRChat Avatar 3" />
+    <!-- Add more as needed -->
   </section>
 
-  <section id="gangs-section">
-    <h2 class="section-title">Cool Things💢</h2>
-    <div id="gangList" class="card-container"></div>
-  </section>
-
-  <!-- Background Audio -->
-  <audio id="backgroundAudio" src="media/Roi.mp3" loop></audio>
-
-  <!-- Scripts -->
-  <script>
-    const CLIENT_ID = '1429417866699997305';
-    const REDIRECT_URI = 'https://coolkidss.netlify.app/';
-    const API_URL = 'https://discord.com/api/oauth2/token';
-    const USER_URL = 'https://discord.com/api/users/@me';
-
-    function redirectToDiscord() {
-      const url = `https://discord.com/oauth2/authorize?client_id=1429417866699997305&response_type=code&redirect_uri=https%3A%2F%2Fcoolkidss.netlify.app%2F&scope=identify`;
-      window.location.href = url;
-    }
-
-    async function exchangeCodeForToken(code) {
-      const params = new URLSearchParams();
-      params.append('client_id', CLIENT_ID);
-      // WARNING: This is NOT secure – should be done in backend!
-      params.append('client_secret', 'dd1zJ688c9oFladDwMvBbW_97yrV0FKD'); // ⚠️ REMOVE FROM FRONTEND IN PRODUCTION
-      params.append('grant_type', 'authorization_code');
-      params.append('code', code);
-      params.append('redirect_uri', REDIRECT_URI);
-      params.append('scope', 'identify');
-
-      const response = await fetch(API_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: params
-      });
-
-      return await response.json();
-    }
-
-    async function getUserInfo(token) {
-      const res = await fetch(USER_URL, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-
-      return await res.json();
-    }
-
-    async function handleOAuthRedirect() {
-      const params = new URLSearchParams(window.location.search);
-      const code = params.get('code');
-      if (!code) return;
-
-      try {
-        const tokenData = await exchangeCodeForToken(code);
-        const user = await getUserInfo(tokenData.access_token);
-
-        const userDiv = document.getElementById('userInfo');
-
-        if (user && user.username && user.discriminator) {
-          const avatarUrl = user.avatar
-            ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png`
-            : `https://cdn.discordapp.com/embed/avatars/${parseInt(user.discriminator) % 5}.png`;
-
-          userDiv.innerHTML = `
-            <img src="${avatarUrl}" alt="Avatar">
-            ${user.username}#${user.discriminator}
-          `;
-        } else {
-          userDiv.textContent = "Failed to load user info.";
-        }
-      } catch (error) {
-        console.error('OAuth Error:', error);
-        document.getElementById('userInfo').textContent = 'OAuth Login Failed';
-      }
-    }
-
-    handleOAuthRedirect();
-
-    function playMusicAndHideOverlay() {
-      const overlay = document.getElementById('overlay');
-      const audio = document.getElementById('backgroundAudio');
-      audio.play();
-      overlay.classList.add('hidden');
-    }
-  </script>
+  <footer>
+    &copy; 2025 VRChat Avatars Showcase. All rights reserved.
+  </footer>
 </body>
 </html>
