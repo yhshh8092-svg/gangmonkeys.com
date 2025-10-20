@@ -12,8 +12,8 @@
     }
 
     html, body {
-      width: 100%;
       height: 100%;
+      width: 100%;
       overflow-x: hidden;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: #000;
@@ -102,7 +102,6 @@
 </head>
 <body>
 
-  <!-- Stars background canvas -->
   <canvas id="starfield"></canvas>
 
   <header>
@@ -135,62 +134,81 @@
   <script>
     const canvas = document.getElementById('starfield');
     const ctx = canvas.getContext('2d');
-
     let stars = [];
-    let mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+
+    let w = canvas.width = window.innerWidth;
+    let h = canvas.height = window.innerHeight;
+
+    const numStars = 200;
+    const depth = 1000;
+    let mouseX = 0, mouseY = 0;
 
     function resizeCanvas() {
-      canvas.width = window.innerWidth;
-      canvas.height = window.innerHeight;
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
     }
 
     window.addEventListener('resize', resizeCanvas);
-    resizeCanvas();
-
-    // Create stars
-    const STAR_COUNT = 150;
-    for (let i = 0; i < STAR_COUNT; i++) {
-      stars.push({
-        x: Math.random() * canvas.width,
-        y: Math.random() * canvas.height,
-        radius: Math.random() * 1.5 + 0.5,
-        speed: Math.random() * 0.3 + 0.1
-      });
-    }
-
     document.addEventListener('mousemove', e => {
-      mouse.x = e.clientX;
-      mouse.y = e.clientY;
+      mouseX = (e.clientX - w / 2) / 100;
+      mouseY = (e.clientY - h / 2) / 100;
     });
 
-    function animateStars() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    function Star() {
+      this.x = Math.random() * w - w / 2;
+      this.y = Math.random() * h - h / 2;
+      this.z = Math.random() * depth;
 
-      for (let star of stars) {
-        // Parallax movement based on mouse position
-        const dx = (mouse.x - canvas.width / 2) * 0.0001;
-        const dy = (mouse.y - canvas.height / 2) * 0.0001;
-
-        star.x += dx * star.speed * 100;
-        star.y += dy * star.speed * 100;
-
-        // Wrap around edges
-        if (star.x < 0) star.x = canvas.width;
-        if (star.x > canvas.width) star.x = 0;
-        if (star.y < 0) star.y = canvas.height;
-        if (star.y > canvas.height) star.y = 0;
-
-        // Draw star
-        ctx.beginPath();
-        ctx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
-        ctx.fillStyle = "#ffffff";
-        ctx.fill();
+      this.reset = () => {
+        this.x = Math.random() * w - w / 2;
+        this.y = Math.random() * h - h / 2;
+        this.z = depth;
       }
 
-      requestAnimationFrame(animateStars);
+      this.update = () => {
+        this.z -= 2;
+        if (this.z <= 1) this.reset();
+      }
+
+      this.draw = () => {
+        const scale = 500 / this.z;
+        const x = this.x * scale + w / 2 + mouseX * this.z * 0.01;
+        const y = this.y * scale + h / 2 + mouseY * this.z * 0.01;
+
+        if (x < 0 || x > w || y < 0 || y > h) this.reset();
+
+        const radius = scale * 1;
+        const alpha = 1 - this.z / depth;
+
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, 2 * Math.PI);
+        ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+        ctx.fill();
+      }
     }
 
-    animateStars();
+    function createStars() {
+      stars = [];
+      for (let i = 0; i < numStars; i++) {
+        stars.push(new Star());
+      }
+    }
+
+    function animate() {
+      ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
+      ctx.fillRect(0, 0, w, h);
+
+      for (let star of stars) {
+        star.update();
+        star.draw();
+      }
+
+      requestAnimationFrame(animate);
+    }
+
+    resizeCanvas();
+    createStars();
+    animate();
   </script>
 
 </body>
