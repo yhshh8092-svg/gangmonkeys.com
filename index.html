@@ -1,267 +1,65 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>VRChat Avatars Gallery</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    html, body {
-      height: 100%;
-      width: 100%;
-      overflow-x: hidden;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: #000;
-      color: #fff;
-    }
-
-    canvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      z-index: 0;
-    }
-
-    body > *:not(canvas) {
-      position: relative;
-      z-index: 1;
-    }
-
-    header {
-      text-align: center;
-      padding: 40px 20px 20px;
-    }
-
-    header img {
-      max-width: 180px;
-      height: auto;
-    }
-
-    header h1 {
-      font-size: 2.2em;
-      letter-spacing: 1.5px;
-      margin-top: 15px;
-    }
-
-    main {
-      padding: 40px 20px;
-    }
-
-    .gallery {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 25px;
-    }
-
-    .gallery figure {
-      background: rgba(30, 30, 30, 0.85);
-      border-radius: 10px;
-      overflow: hidden;
-      transition: transform 0.3s, box-shadow 0.3s;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
-    }
-
-    .gallery figure:hover {
-      transform: translateY(-5px);
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.7);
-    }
-
-    .gallery img {
-      width: 100%;
-      display: block;
-      border-bottom: 1px solid #222;
-      border-radius: 10px 10px 0 0;
-    }
-
-    .gallery figcaption {
-      padding: 10px 15px;
-      font-size: 0.95em;
-      color: #ccc;
-    }
-
-    footer {
-      text-align: center;
-      padding: 20px;
-      font-size: 0.9em;
-      color: #888;
-      border-top: 1px solid #222;
-      margin-top: 40px;
-    }
-
-    #audioControl {
-      position: fixed;
-      top: 15px;
-      right: 15px;
-      background: rgba(0,0,0,0.6);
-      border: none;
-      color: white;
-      padding: 10px 15px;
-      font-size: 14px;
-      border-radius: 5px;
-      cursor: pointer;
-      z-index: 10;
-      transition: background 0.3s ease;
-    }
-
-    #audioControl:hover {
-      background: rgba(255,255,255,0.1);
-    }
-
-    @media (max-width: 600px) {
-      header h1 {
-        font-size: 1.6em;
-      }
-    }
-  </style>
+  <meta charset="utf-8"/>
+  <title>Spotify Clone</title>
+  <link rel="stylesheet" href="css/main.css"/>
+  <link rel="stylesheet" href="css/themes.css" id="theme-link"/>
 </head>
 <body>
+  <div class="app">
+    <!-- LEFT SIDEBAR -->
+    <aside class="sidebar">
+      <div class="logo">🎧 SpotiClone</div>
+      <nav>
+        <a href="#" class="nav-link active" data-page="home">Home</a>
+        <a href="#" class="nav-link" data-page="search">Search</a>
+        <a href="#" class="nav-link" data-page="library">Your Library</a>
+      </nav>
 
-  <canvas id="starfield"></canvas>
+      <div class="theme-picker">
+        <label>Theme
+          <select id="theme-select">
+            <option value="dark">Dark</option>
+            <option value="light">Light</option>
+            <option value="neon">Neon</option>
+            <option value="vapor">Vaporwave</option>
+          </select>
+        </label>
+      </div>
+    </aside>
 
-  
+    <!-- MAIN CONTENT -->
+    <main class="content" id="content">
+      <!-- injected by js -->
+    </main>
+  </div>
 
-  <!-- Hidden audio element -->
-  <audio id="bgAudio" loop preload="auto">
-    <source src="media/Roi.mp3" type="audio/mpeg">
-    <!-- Add more formats if needed -->
-    Your browser does not support HTML5 audio.
-  </audio>
+  <!-- BOTTOM PLAYER -->
+  <footer class="player">
+    <div class="now-playing">
+      <img id="track-img" src="" alt="">
+      <div>
+        <div id="track-name">No track</div>
+        <div id="track-artist">—</div>
+      </div>
+    </div>
 
-  <header>
-    <img src="images/gangmonkeys.gif" alt="VRChat Avatars Logo" />
-    <h1>VRChat Avatars Gallery</h1>
-  </header>
+    <div class="controls">
+      <button id="prev">⏮</button>
+      <button id="play-pause">▶</button>
+      <button id="next">⏭</button>
+    </div>
 
-  <main>
-    <section class="gallery">
-      <figure>
-        <img src="media/1.gif" alt="VRChat Avatar 1" loading="lazy" />
-        <figcaption>Monkey Gang Avatar</figcaption>
-      </figure>
-      <figure>
-        <img src="media/2.gif" alt="VRChat Avatar 2" loading="lazy" />
-        <figcaption>Cyber Cool Avatar</figcaption>
-      </figure>
-      <figure>
-        <img src="media/3.gif" alt="VRChat Avatar 3" loading="lazy" />
-        <figcaption>Neon Chill Style</figcaption>
-      </figure>
-    </section>
-  </main>
-
-  <footer>
-    &copy; 2025 VRChat Avatars Showcase. All rights reserved.
+    <div class="progress-bar">
+      <span id="time-current">0:00</span>
+      <input type="range" id="progress" value="0" max="100">
+      <span id="time-total">0:30</span>
+    </div>
   </footer>
 
-  <!-- Starfield Script -->
-  <script>
-    const canvas = document.getElementById('starfield');
-    const ctx = canvas.getContext('2d');
-    let stars = [];
-
-    let w = canvas.width = window.innerWidth;
-    let h = canvas.height = window.innerHeight;
-
-    const numStars = 200;
-    const depth = 1000;
-    let mouseX = 0, mouseY = 0;
-
-    function resizeCanvas() {
-      w = canvas.width = window.innerWidth;
-      h = canvas.height = window.innerHeight;
-    }
-
-    window.addEventListener('resize', resizeCanvas);
-    document.addEventListener('mousemove', e => {
-      mouseX = (e.clientX - w / 2) / 100;
-      mouseY = (e.clientY - h / 2) / 100;
-    });
-
-    function Star() {
-      this.x = Math.random() * w - w / 2;
-      this.y = Math.random() * h - h / 2;
-      this.z = Math.random() * depth;
-
-      this.reset = () => {
-        this.x = Math.random() * w - w / 2;
-        this.y = Math.random() * h - h / 2;
-        this.z = depth;
-      }
-
-      this.update = () => {
-        this.z -= 2;
-        if (this.z <= 1) this.reset();
-      }
-
-      this.draw = () => {
-        const scale = 500 / this.z;
-        const x = this.x * scale + w / 2 + mouseX * this.z * 0.01;
-        const y = this.y * scale + h / 2 + mouseY * this.z * 0.01;
-
-        if (x < 0 || x > w || y < 0 || y > h) this.reset();
-
-        const radius = scale * 1;
-        const alpha = 1 - this.z / depth;
-
-        ctx.beginPath();
-        ctx.arc(x, y, radius, 0, 2 * Math.PI);
-        ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
-        ctx.fill();
-      }
-    }
-
-    function createStars() {
-      stars = [];
-      for (let i = 0; i < numStars; i++) {
-        stars.push(new Star());
-      }
-    }
-
-    function animate() {
-      ctx.fillStyle = "rgba(0, 0, 0, 0.2)";
-      ctx.fillRect(0, 0, w, h);
-
-      for (let star of stars) {
-        star.update();
-        star.draw();
-      }
-
-      requestAnimationFrame(animate);
-    }
-
-    resizeCanvas();
-    createStars();
-    animate();
-  </script>
-
-  <!-- Audio Script -->
-  <script>
-    const audio = document.getElementById('bgAudio');
-    const btn = document.getElementById('audioControl');
-
-    // Autoplay requires user interaction — wait for first click
-    document.addEventListener('click', function playOnce() {
-      audio.volume = 0.25;
-      audio.play().catch(() => {});
-      document.removeEventListener('click', playOnce);
-    });
-
-    // Toggle button
-    btn.addEventListener('click', () => {
-      if (audio.paused) {
-        audio.play();
-        btn.textContent = '🔊 Audio';
-      } else {
-        audio.pause();
-        btn.textContent = '🔇 Audio';
-      }
-    });
-  </script>
-
+  <script src="js/mock-data.js"></script>
+  <script src="js/player-ui.js"></script>
+  <script src="js/theme-switcher.js"></script>
 </body>
 </html>
