@@ -1,0 +1,20 @@
+:root{
+  --sidebar-width:220px;
+  --player-height:80px;
+  --gap:1rem;
+  font-family:system-ui, sans-serif;
+}
+* {box-sizing:border-box; margin:0; padding:0;}
+body{height:100vh; overflow:hidden; display:flex; flex-direction:column;}
+.app{display:flex; flex:1; overflow:hidden;}
+.sidebar{width:var(--sidebar-width); padding:var(--gap); display:flex; flex-direction:column;}
+.logo{font-size:1.4rem; font-weight:700; margin-bottom:var(--gap);}
+.nav-link{display:block; padding:.6rem 0; text-decoration:none; transition:opacity .2s;}
+.nav-link.active{opacity:1; font-weight:600;}
+.content{flex:1; padding:var(--gap); overflow-y:auto;}
+.player{height:var(--player-height); border-top:1px solid; display:flex; align-items:center; justify-content:space-between; padding:0 var(--gap);}
+.now-playing{display:flex; align-items:center; gap:.7rem;}
+.now-playing img{width:48px; height:48px; object-fit:cover;}
+.controls{display:flex; gap:.7rem;}
+.progress-bar{display:flex; align-items:center; gap:.7rem; flex:1; max-width:400px;}
+input[type=range]{flex:1;}
